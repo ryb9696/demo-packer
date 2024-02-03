@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout Source') {
             steps {
                 git branch: "main",
-                url: 'https://github.com/ryb9696/opq-ojt.git'
+                url: 'https://github.com/ryb9696/demo-packer.git'
             }
         }
 
