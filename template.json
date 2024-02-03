@@ -1,0 +1,41 @@
+{
+    "variables": {
+      "aws_access_key": "",
+      "aws_secret_key": ""
+    },
+    "builders": [
+      {
+        "type": "amazon-ebs",
+        "access_key": "{{user `aws_access_key`}}",
+        "secret_key": "{{user `aws_secret_key`}}",
+        "region": "us-east-1",
+        "source_ami_filter": {
+          "filters": {
+            "virtualization-type": "hvm",
+            "name": "amzn2-ami-hvm-2.0.*.1-x86_64-ebs",
+            "root-device-type": "ebs"
+          },
+          "owners": [
+            "amazon"
+          ],
+          "most_recent": true
+        },
+        "vpc_id": "vpc-07aeb0961a081ffb0",
+        "subnet_id": "subnet-08262adfe84d8da00",
+        "security_group_id": "sg-0e25fdba7e46408bc",
+        "instance_type": "t2.micro",
+        "ssh_username": "{{user `ssh_username`}}",
+        "ami_name": "packer-example {{timestamp}}",
+        "tags": {
+          "Name": "JavaHome - {{timestamp}}"
+        }
+      }
+    ],
+    "provisioners": [
+      {
+        "type": "shell",
+        "script": "apache.sh" 
+      }
+    ]
+  }
+  
