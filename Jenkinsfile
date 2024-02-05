@@ -47,7 +47,16 @@ pipeline {
                 }
             }
         }
-
-        // Add more stages as needed
+        stage('Create Launch Template with Terraform') {
+            steps {
+                script {
+                    // Execute Terraform to create a Launch Template
+                    sh 'terraform init'
+                    sh 'terraform apply -auto-approve'
+                }
+            }
+        }
     }
-}
+
+    
+    }
