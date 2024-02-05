@@ -14,7 +14,7 @@ pipeline {
                     git branch: 'main', url: 'https://github.com/ryb9696/demo-packer.git'
 
                     // Build AMI with Packer
-                    sh 'packer build -var-file=packer-vars.json packer-template.json'
+                    sh 'packer build -var-file=vars.json template.json'
                     
                     // Fetch the AMI ID from the Packer manifest
                     def amiId = sh(script: 'cat manifest.json | jq -r \'.builds[0].artifact_id\' | awk -F\':\' \'{print $NF}\' | tr -d \'"\'', returnStdout: true).trim()
