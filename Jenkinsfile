@@ -39,13 +39,4 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            // Clean up: Destroy resources (e.g., terminate instances) after the pipeline
-            script {
-                // Destroy Terraform resources
-                sh 'terraform destroy -auto-approve'
-            }
-        }
-    }
 }
