@@ -11,7 +11,7 @@ pipeline {
             steps {
                 script {
                     // Checkout source code from version control (replace with your VCS)
-                    git branch: 'main', url: 'https://github.com/your/repo.git'
+                    git branch: 'main', url: 'https://github.com/ryb9696/demo-packer.git'
 
                     // Build AMI with Packer
                     sh 'packer build -var-file=packer-vars.json packer-template.json'
