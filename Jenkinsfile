@@ -1,52 +1,33 @@
 pipeline {
     agent any
-
     
     environment {
-        AWS_CREDENTIALS = credentials('packer')
+        AWS_REGION = 'us-east-1' 
+        AWS_CREDENTIALS = credentials('packer')  
     }
 
     stages {
-
-        stage('Checkout Source') {
-            steps {
-                git branch: "main",
-                url: 'https://github.com/ryb9696/demo-packer.git'
-            }
-        }
-
-        stage('packer plugin') {
+        stage('Build AMI with Packer') {
             steps {
                 script {
-                    sh 'packer plugins install github.com/hashicorp/amazon'
-                }
-            }
-        }
-        
-         stage('packer validate') {
-            steps {
-                script {
-                    sh 'packer validate -var-file=vars.json template.json'
-                }
-            }
-        }
+                    // Checkout source code from version control (replace with your VCS)
+                    git branch: 'main', url: 'https://github.com/your/repo.git'
 
-        stage('packer build') {
-            steps {
-                script {
-                    sh 'packer build -var-file=vars.json template.json'
-
-                    // Fetch the latest AMI ID from the Packer manifest
-                    def latestAmiId = sh(script: 'cat manifest.json | jq -r \'.builds[0].artifact_id\' | awk -F\':\' \'{print $NF}\' | tr -d \'"\'', returnStdout: true).trim()
-
+                    // Build AMI with Packer
+                    sh 'packer build -var-file=packer-vars.json packer-template.json'
+                    
+                    // Fetch the AMI ID from the Packer manifest
+                    def amiId = sh(script: 'cat manifest.json | jq -r \'.builds[0].artifact_id\' | awk -F\':\' \'{print $NF}\' | tr -d \'"\'', returnStdout: true).trim()
+                    
                     // Store the AMI ID as an environment variable
-                    env.LATEST_AMI_ID = latestAmiId
+                    env.PACKER_AMI_ID = amiId
 
-                    // Print the latest AMI ID for logging purposes
-                    echo "Latest AMI ID: $latestAmiId"
+                    // Print the AMI ID for logging purposes
+                    echo "Packer AMI ID: $amiId"
                 }
             }
         }
+
         stage('Create Launch Template with Terraform') {
             steps {
                 script {
@@ -58,5 +39,13 @@ pipeline {
         }
     }
 
-    
+    post {
+        always {
+            // Clean up: Destroy resources (e.g., terminate instances) after the pipeline
+            script {
+                // Destroy Terraform resources
+                sh 'terraform destroy -auto-approve'
+            }
+        }
     }
+}
