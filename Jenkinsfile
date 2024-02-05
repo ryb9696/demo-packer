@@ -39,5 +39,16 @@ pipeline {
             }
         }
     }
-
+    post {
+        always {
+            // Clean up: Destroy Terraform resources after the pipeline
+            script {
+                // Destroy Terraform resources
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'your-aws-credentials-id', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                    sh 'terraform destroy -auto-approve -var "ami_id=${env.PACKER_AMI_ID}"'
+                }
+            }
+        }
+    }
 }
+
