@@ -33,7 +33,8 @@ pipeline {
                 script {
                     // Execute Terraform to create a Launch Template
                     sh 'terraform init'
-                    sh 'terraform apply -auto-approve -var "ami_id=${env.PACKER_AMI_ID}"'
+                    sh "terraform apply -auto-approve -var \"ami_id=${env.PACKER_AMI_ID}\""
+
                 }
             }
         }
