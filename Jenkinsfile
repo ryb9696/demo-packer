@@ -17,7 +17,7 @@ pipeline {
                     sh 'packer build -var-file=vars.json template.json'
 
                     // Install jq
-                    sh 'apt-get update && apt-get install -y jq'
+                    sh 'sudo apt-get update && sudo apt-get install -y jq'
                     
                     // Fetch the AMI ID from the Packer manifest
                     def amiId = sh(script: 'cat manifest.json | jq -r \'.builds[0].artifact_id\' | awk -F\':\' \'{print $NF}\' | tr -d \'"\'', returnStdout: true).trim()
