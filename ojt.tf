@@ -34,5 +34,5 @@ resource "aws_launch_template" "example" {
 
   key_name = "ojt"  
 
-  image_id = "$amiId"  
+  image_id = var.ami_id  
 }
